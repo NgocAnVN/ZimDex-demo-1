@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ZimDex — Settings + Spotify</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Desktop wallpaper (parallax + live video) -->
+  <div class="desktop" id="desktop" aria-hidden="true">
+    <video id="wpVideo" class="wp-video" autoplay muted loop playsinline></video>
+    <div class="wp-layer" id="wpBase"></div>
+  </div>
+
+  <!-- Widgets layer -->
+  <div class="widgets-layer" id="widgets"></div>
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="left"><span id="time">--:--</span></div>
+  </div>
+
+  <!-- Settings window -->
+  <div class="window" id="window" role="dialog" aria-label="Settings">
+    <div class="titlebar" id="dragHandle">
+      <div class="title">Settings — About</div>
+      <div class="win-controls">
+        <button class="ctrl minimize" id="btnMin" title="Ẩn">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <line x1="6" y1="12" x2="18" y2="12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <button class="ctrl close" id="btnClose" title="Tắt">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M7 7l10 10M17 7L7 17" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="content">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="search">
+          <svg class="ico" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M10 4a6 6 0 014.8 9.6l4.3 4.3-1.4 1.4-4.3-4.3A6 6 0 1110 4zm0 2a4 4 0 100 8 4 4 0 000-8z"/>
+          </svg>
+          search settings
+        </div>
+        <nav class="nav" aria-label="Settings sections">
+          <div class="nav-item"><span class="dot d-gray"></span>Devices</div>
+          <div class="nav-item"><span class="dot d-orange"></span>Sounds</div>
+          <div class="nav-item"><span class="dot d-red"></span>Notification</div>
+          <div class="nav-item"><span class="dot d-cyan"></span>Apps</div>
+          <div class="nav-item"><span class="dot d-blue"></span>Display</div>
+          <div class="nav-item"><span class="dot d-purple"></span>Storage</div>
+          <div class="nav-item"><span class="dot d-green"></span>Battery</div>
+          <div class="nav-item"><span class="dot d-red"></span>Privacy</div>
+          <div class="nav-item"><span class="dot d-lime"></span>Accessibility</div>
+          <div class="nav-item"><span class="dot d-gray"></span>System</div>
+          <div class="nav-item active"><span class="dot" style="background:#000"></span>About</div>
+        </nav>
+      </aside>
+
+      <!-- Main panel -->
+      <main class="panel">
+        <section class="card kv g-name">
+          <div class="k">Computer name</div>
+          <div class="v">NgocAnn</div>
+        </section>
+
+        <section class="card g-hero">
+          <div class="hero" aria-hidden="true"></div>
+          <h1>ZimDex <span>with AI</span></h1>
+        </section>
+
+        <section class="card kv g-more">
+          <div class="k">More device info</div>
+          <div class="v">Ask your mom</div>
+        </section>
+
+        <section class="card g-spec specs-card">
+          <div class="spec-title">Specifications</div>
+          <div class="spec-chips">
+            <div class="spec-chip">
+              <div class="chip-head"><span class="sq"></span><span class="chip-label">CPU</span></div>
+              <div class="chip-main">Intel Core i3</div>
+              <div class="chip-sub">10105F — 4.2GHz</div>
+            </div>
+            <div class="spec-chip">
+              <div class="chip-head"><span class="sq"></span><span class="chip-label">GPU</span></div>
+              <div class="chip-main">NVIDIA GeForce GTX 1650</div>
+              <div class="chip-sub">11,9GB</div>
+            </div>
+            <div class="spec-chip">
+              <div class="chip-head"><span class="sq"></span><span class="chip-label">RAM</span></div>
+              <div class="chip-main">16GB</div>
+              <div class="chip-sub">DDR4</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="card g-about">
+          <div class="about-row">
+            <div class="left">About ZimDex</div>
+            <div class="right">64-bit</div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Spotify window -->
+  <div class="window spotify" id="spotifyWin" role="dialog" aria-label="Spotify">
+    <div class="titlebar teal" id="dragSpotify">
+      <div class="title">Spotify — Embed</div>
+      <div class="win-controls">
+        <button class="ctrl minimize" id="spBtnMin" title="Ẩn">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <line x1="6" y1="12" x2="18" y2="12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <button class="ctrl close" id="spBtnClose" title="Tắt">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M7 7l10 10M17 7L7 17" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <div class="spotify-body">
+      <div class="spotify-frame">
+        <iframe id="spIframe" title="Spotify" loading="lazy"
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                frameborder="0" width="100%" height="100%"
+                src="https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M?utm_source=generator"></iframe>
+      </div>
+      <div class="spotify-toolbar">
+        <input id="spUrl" class="input" placeholder="Dán link Spotify (track/album/playlist/artist)..." />
+        <button id="spLoad" class="btn small">Load</button>
+        <button id="spOpen" class="btn small alt">Mở Spotify</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dock -->
+  <div class="dock" id="dock" role="toolbar" aria-label="Dock">
+    <div class="left">
+      <button class="logo has-img" id="logoBtn" title="Logo — chuột phải để đổi, Shift+click để reset">
+        <img id="dockLogoImg" src="Zimlogo.png" alt="" />
+        <svg id="dockLogoFallback" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M4 5h16L4 19h16"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Center icons (Windows 11 style) -->
+    <div class="center-abs">
+      <div class="task-center" id="taskCenter">
+        <div class="task-item">
+          <button class="task-btn has-img" id="dockSettings" title="Mở/Ẩn Settings">
+            <img id="dockSettingsImg" src="Setting.png" alt="" />
+            <svg id="dockSettingsFallback" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M12 8.5a3.5 3.5 0 100 7 3.5 3.5 0 000-7z"/>
+              <path d="M19.4 13a7.9 7.9 0 000-2l2-1.6-2-3.4-2.4 1a7.8 7.8 0 00-1.7-1L13 2h-2l-.3 2.9a7.8 7.8 0 00-1.7 1l-2.4-1-2 3.4 2 1.6a7.9 7.9 0 000 2l-2 1.6 2 3.4 2.4-1c.5.4 1.1.7 1.7 1L11 22h2l.3-2.9c.6-.3 1.2-.6 1.7-1l2.4 1 2-3.4-2-1.6z" opacity=".6"/>
+            </svg>
+          </button>
+          <div class="task-ind" id="indSettings" aria-hidden="true"></div>
+        </div>
+
+        <div class="task-item">
+          <button class="task-btn has-img" id="dockSpotify" title="Mở/Ẩn Spotify">
+            <img id="dockSpotifyImg" src="Spotify.png" alt="" />
+            <svg id="dockSpotifyFallback" class="dock-spotify-ico" viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="currentColor" d="M12 2a10 10 0 100 20 10 10 0 000-20zm4.3 14.5a.8.8 0 01-1.1.2c-3-1.8-6.7-2.2-11-1.1a.8.8 0 01-.4-1.6c4.7-1.2 8.9-.8 12.2 1.2.4.2.5.7.3 1.1zM16 12.3c-.3.4-.8.5-1.2.3-2.6-1.6-6.6-2-9.6-1a.9.9 0 11-.6-1.7c3.5-1 7.8-.6 10.8 1.2.4.2.6.8.3 1.2zM15.2 9c-2.3-1.4-6.2-1.6-8.5-.9a.9.9 0 11-.5-1.7c2.8-.8 7.2-.6 10 1.2a.9.9 0 11-1 1.6z"/>
+            </svg>
+          </button>
+          <div class="task-ind" id="indSpotify" aria-hidden="true"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="right">
+      <button class="qt" id="qtWifi" aria-label="Wi‑Fi">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 20a2 2 0 100-4 2 2 0 000 4zm6.9-8.5A12 12 0 003 11.5l1.7 1.7a9.5 9.5 0 0114.6 0l1.6-1.7zM12 7c-3.1 0-6.1 1.2-8.5 3.5L5 12c1.9-1.9 4.4-3 7-3s5.1 1.1 7 3l1.5-1.5C18.1 8.2 15.1 7 12 7z"/></svg>
+      </button>
+      <button class="qt" id="qtVolume" aria-label="Âm lượng">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M5 9v6h4l5 4V5L9 9H5zM19 12a3 3 0 01-1.7 2.7v-5.4A3 3 0 0119 12z"/></svg>
+      </button>
+      <button class="qt" id="qtCam" aria-label="Camera">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 6h16v12H4zM9 9h6v6H9z"/></svg>
+      </button>
+    </div>
+
+    <!-- hidden pickers -->
+    <input id="pick" type="file" accept="image/*" hidden />
+    <input id="pickVideo" type="file" accept="video/mp4,video/webm,video/*" hidden />
+  </div>
+
+  <!-- Widget picker (khung sẵn) -->
+  <div class="widget-picker hidden" id="widgetPicker" role="dialog" aria-label="Widget picker">
+    <div class="wp-head">
+      <div class="wp-title">Add widget</div>
+      <button class="wp-close" id="wpClose" title="Close">
+        <svg viewBox="0 0 24 24"><path d="M7 7l10 10M17 7L7 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="wp-instr">Kéo một widget ra màn hình để thả.</div>
+    <div class="wp-grid">
+      <div class="wp-item" draggable="false" data-type="bars">
+        <div class="preview bars">
+          <div class="pbar"></div><div class="pbar"></div><div class="pbar"></div><div class="pbar"></div><div class="pbar"></div>
+          <div class="pbar"></div><div class="pbar"></div><div class="pbar"></div><div class="pbar"></div><div class="pbar"></div>
+        </div>
+        <div class="wp-name">Music Visualizer</div>
+      </div>
+      <div class="wp-item" draggable="false" data-type="clock">
+        <div class="preview clock">19:05</div>
+      </div>
+    </div>
+    <div class="wp-tip">Mẹo: nhấn chuột phải lên widget để Remove/Lock.</div>
+  </div>
+
+  <script src="script.js" defer></script>
+  <span class="sr-only" id="sr-live" aria-live="polite"></span>
+</body>
+<!-- Power menu (Start -> Power) -->
+<div id="powerMenu" class="power-menu hidden" role="menu" aria-label="Power">
+  <div class="pm-item" data-act="lock">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a1 1 0 011 1v7h-2V3a1 1 0 011-1zm-6 9h12a2 2 0 012 2v7a2 2 0 01-2 2H6a2 2 0 01-2-2v-7a2 2 0 012-2z"/></svg>
+    Lock
+  </div>
+</div>
+
+<!-- Lockscreen -->
+<div id="lock" class="lock hidden" aria-hidden="true">
+  <div class="lock-inner">
+    <div class="lock-clock" aria-live="polite">
+      <div class="hh" id="lsHour">--</div>
+      <div class="mm" id="lsMin">--</div>
+      <div class="date" id="lsDate">---</div>
+    </div>
+
+    <div class="lock-pill" id="lockPill" aria-hidden="true">
+      <div class="dots" id="lockDots"></div>
+    </div>
+  </div>
+  <!-- input ẩn để nhận phím -->
+  <input id="lockInput" class="lock-input" type="password" autocomplete="off" />
+</div>
+</html>
