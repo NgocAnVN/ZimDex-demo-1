@@ -375,4 +375,137 @@
     window.ZD = window.ZD || {}; window.ZD.lock = enter; window.ZD.unlock = leave;
   })();
 
+})();// ===== WallpaperManager — single source of truth (no revert) =====
+(() => {
+  const $ = s => document.querySelector(s);
+  const root = document.documentElement;
+  const desktop = $('#desktop');
+  const wpLayer = $('#wpBase');
+
+  // apply CSS var(--wp)
+  function setVar(url){ root.style.setProperty('--wp', `url("${url}")`); }
+
+  // cross‑fade overlay -> setVar(url) khi end
+  function crossfade(url){
+    if (!desktop) { setVar(url); return; }
+    const next = document.createElement('div');
+    next.className = 'wp-next enter';
+    next.style.backgroundImage = `url("${url}")`;
+    desktop.appendChild(next);
+    const done = () => {
+      setVar(url);
+      next.removeEventListener('animationend', done);
+      next.remove();
+    };
+    next.addEventListener('animationend', done);
+  }
+
+  // token chống chồng lệnh
+  let ver = 0;   // tăng mỗi lần set
+  function currentVer(){ return ++ver; }
+
+  // File -> DataURL
+  function fileToDataURL(file){
+    return new Promise((res, rej)=>{
+      const rd = new FileReader();
+      rd.onload = () => res(String(rd.result || ''));
+      rd.onerror = rej;
+      rd.readAsDataURL(file);
+    });
+  }
+
+  // Pick ảnh (JPG/PNG/WEBP/AVIF)
+  function pickImageFile(){
+    return new Promise((resolve)=>{
+      let inp = $('#pick');
+      if (!inp){
+        inp = document.createElement('input');
+        inp.id = 'pick';
+        inp.type = 'file';
+        document.body.appendChild(inp);
+      }
+      inp.accept = 'image/jpeg,image/jpg,image/png,image/webp,image/avif,image/*';
+      inp.value = '';
+      inp.onchange = () => resolve(inp.files?.[0] || null);
+      inp.click();
+    });
+  }
+
+  // Set từ File: show ngay bằng objectURL + lưu base64 nếu token vẫn còn hiệu lực
+  async function setFromFile(file){
+    if (!file) return;
+    const token = currentVer();
+
+    // 1) objectURL để hiển thị ngay (JPG to vẫn ok)
+    const tmpURL = URL.createObjectURL(file);
+
+    // preload để chắc chắn ảnh hợp lệ rồi mới crossfade
+    const img = new Image();
+    img.onload = async () => {
+      // Nếu trong lúc preload m chọn ảnh khác, token thay đổi -> bỏ
+      if (token !== ver) { URL.revokeObjectURL(tmpURL); return; }
+
+      crossfade(tmpURL);          // show ngay
+      // 2) chuyển sang base64 và lưu (reload vẫn còn)
+      try{
+        const dataUrl = await fileToDataURL(file);
+        // nếu user chưa chọn ảnh mới trong lúc convert, commit
+        if (token === ver){
+          try{ localStorage.setItem('zd_wallpaper', dataUrl); }catch{}
+          setVar(dataUrl);        // thay objectURL bằng base64 bền vững
+        }
+      }catch{}
+      // luôn revoke objectURL sau cùng
+      try{ URL.revokeObjectURL(tmpURL); }catch{}
+    };
+    img.onerror = () => {
+      try{ URL.revokeObjectURL(tmpURL); }catch{}
+      alert('Ảnh không hợp lệ. Thử JPG/PNG/WebP khác nhé.');
+    };
+    img.src = tmpURL;
+  }
+
+  // Public API nếu muốn gọi chỗ khác
+  window.WP = { setFromFile };
+
+  // Restore DUY NHẤT lúc load
+  (function restoreOnce(){
+    const saved = localStorage.getItem('zd_wallpaper');
+    if (saved) setVar(saved);
+  })();
+
+  // Gắn lại mục “Change wallpaper” vào ctxmenu hiện tại (nếu chưa có)
+  (function patchCtx(){
+    const tryPatch = () => {
+      const m = $('#ctxMenu'); if (!m) return false;
+      // nếu menu đã có item wp-change do code cũ, ta thay handler
+      let it = m.querySelector('[data-act="wp-change"]');
+      if (!it){
+        it = document.createElement('div');
+        it.className = 'ctx-item'; it.setAttribute('data-act','wp-change');
+        it.innerHTML = `<svg viewBox="0 0 24 24"><path fill="currentColor" d="M4 5h16v12H4zM7 9h10v4H7z"/></svg>Change wallpaper…`;
+        m.insertBefore(it, m.firstChild);
+      }
+      it.addEventListener('click', async (e)=>{
+        e.stopPropagation();
+        const f = await pickImageFile();
+        await setFromFile(f);
+        // ẩn menu nếu code cũ chưa đóng
+        m.classList.add('hidden');
+      });
+      return true;
+    };
+    // patch ngay nếu #ctxMenu đã render, nếu chưa thì chờ lần right‑click
+    if (!tryPatch()) document.addEventListener('contextmenu', ()=>setTimeout(tryPatch,0));
+  })();
+
+  // Ngăn tab khác “giật ngược” khi đổi localStorage
+  window.addEventListener('storage', (e)=>{
+    if (e.key === 'zd_wallpaper' && typeof e.newValue === 'string'){
+      // chỉ áp nếu chưa có thao tác local (token không đổi trong 300ms)
+      const tokenBefore = ver;
+      setTimeout(()=>{ if (ver === tokenBefore) setVar(e.newValue); }, 300);
+    }
+  });
+
 })();
